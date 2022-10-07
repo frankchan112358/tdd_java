@@ -11,6 +11,15 @@ public class BudgetService {
     }
 
     public double queryBudget(LocalDate startLocalDate, LocalDate endLocalDate) {
-        return 0;
+        Period period = new Period(startLocalDate, endLocalDate);
+        if (period.isInvalid()) {
+            return 0;
+        }
+
+        return budgetRepo.findAll()
+                .stream()
+                .mapToDouble(budget -> budget.overlappingAmount(period))
+                .sum();
     }
+
 }
